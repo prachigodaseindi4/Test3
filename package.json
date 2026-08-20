@@ -1,0 +1,14 @@
+{
+  "name": "basic-app",
+  "version": "1.0.0",
+  "description": "new app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests configured\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
