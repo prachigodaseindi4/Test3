@@ -1,8 +1,8 @@
-pipeline {
+\pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'ghcr.io/prachigodaseindi4/test3:latest'
+        IMAGE_NAME = "ghcr.io/prachigodaseindi4/test3:latest"
     }
 
     stages {
@@ -21,7 +21,9 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh '''
+                    docker build -t $IMAGE_NAME .
+                '''
             }
         }
 
@@ -29,15 +31,15 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'ghcr-credentials',
-                        usernameVariable: 'GHCR_USER',
+                        credentialsId: 'prachi',
+                        usernameVariable: 'GHCR_USERNAME',
                         passwordVariable: 'GHCR_TOKEN'
                     )
                 ]) {
                     sh '''
                         echo "$GHCR_TOKEN" | docker login ghcr.io \
-                          -u "$GHCR_USER" \
-                          --password-stdin
+                            -u "$GHCR_USERNAME" \
+                            --password-stdin
                     '''
                 }
             }
@@ -45,8 +47,20 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push $IMAGE_NAME'
+                sh '''
+                    docker push $IMAGE_NAME
+                '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and Docker image push completed successfully!'
+        }
+
+        failure {
+            echo '❌ Pipeline failed. Check the Console Output.'
         }
     }
 }
